@@ -2,11 +2,12 @@ $(document).ready(function(){
     var api_key = "8f236e524e673e139b0f6739b81a6eb4";
     var celsius = false;
     var ipInfo = "http://ipinfo.io";
-    var url = "http://api.openweathermap.org/data/2.5/weather?units=imperial&lat=";
+    var imperial = "http://api.openweathermap.org/data/2.5/weather?units=imperial&lat=";
+    var metric = "http://api.openweathermap.org/data/2.5/weather?units=metric&lat=";
 
     function result(fahrenheit, c){
-        if(c) return Math.round((fahrenheit - 32) * (5/9)) + "&deg" + "C";
-        return Math.round(fahrenheit) + "&deg" + "F";
+        if(c) return Math.round(((fahrenheit - 32) * (5/9))*10)/10 + "&deg" + "C";
+        return Math.round(fahrenheit*10)/10 + "&deg" + "F";
     }
 
     function render(data, celsius){
@@ -29,10 +30,10 @@ $(document).ready(function(){
 
     $(function(){
         $.getJSON(ipInfo, function(data){
-            loc = data.loc.split(",");
             console.log(data);
+            loc = data.loc.split(",");
 
-        $.getJSON(url + loc[0] + "&lon=" + loc[1] + "&appid=" + api_key, function(data){
+        $.getJSON(imperial + loc[0] + "&lon=" + loc[1] + "&appid=" + api_key, function(data){
             render(data, celsius);
             $("#toggle").click(function(){
                 celsius = !celsius;
