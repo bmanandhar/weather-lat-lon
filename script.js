@@ -1,6 +1,8 @@
 $(document).ready(function(){
     var api_key = "8f236e524e673e139b0f6739b81a6eb4";
     var celsius = false;
+    var ipInfo = "http://ipinfo.io";
+    var url = "http://api.openweathermap.org/data/2.5/weather?units=imperial&lat=";
 
     function result(fahrenheit, c){
         if(c) return Math.round((fahrenheit - 32) * (5/9)) + "&deg" + "C";
@@ -26,8 +28,6 @@ $(document).ready(function(){
     }
 
     $(function(){
-        var ipInfo = "http://ipinfo.io";
-        var url = "http://api.openweathermap.org/data/2.5/weather?units=imperial&lat=";
         $.getJSON(ipInfo, function(data){
             loc = data.loc.split(",");
             console.log(data);
