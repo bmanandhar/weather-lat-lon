@@ -4,11 +4,11 @@ $(document).ready(function(){
     var ipInfo = "https://ipinfo.io";
     var imperial = "https://api.openweathermap.org/data/2.5/weather?units=imperial&lat=";
     var metric = "http://api.openweathermap.org/data/2.5/weather?units=metric&lat=";
-    var celsius = false;
     var fahrenheit = true;
+    var celsius = false;
     function result(fahrenheit, celsius){
-        if(celsius) return Math.round(celsius * 10) / 10 + "&deg" + "C";
-        return Math.round(fahrenheit * 10) / 10 + "&deg" + "F";
+        if(celsius && fahrenheit) return Math.round(celsius * 10) / 10 + "&deg" + "C";
+        else return Math.round(fahrenheit * 10) / 10 + "&#176" + "F";
     }
 
     function cityWeather(data, celsius){
@@ -44,13 +44,12 @@ $(document).ready(function(){
         $(".min").html("Min temp: " + min);
         $(".humidity").html("Humidity: " + data.main.humidity + "%");
         $(".pressure").html("Pressure: " + data.main.pressure + "hPa");
-        $(".wind-speed").html("Wind speed: " + data.wind.speed + "mile/hr");
+        $(".wind-speed").html("Wind speed: " + data.wind.speed + "m/sec");
         $(".wind-dir").html("Wind direction: " + data.wind.deg + "&#176");
         $(".temp").prepend("<img src='" + 'https://openweathermap.org/img/w/' + data.weather[0].icon + '.png' + "'>");
     }
 
     $(function(){
-
         $.getJSON(ipInfo, function(data){
             console.log(data);
             loc = data.loc.split(",");
@@ -61,18 +60,13 @@ $(document).ready(function(){
         $.getJSON(imperial + loc[0] + "&lon=" + loc[1] + "&appid=" + api_key, function(data){
             cityWeather(data, celsius);
             $("#toggle").click(function(){
-                celsius = !celsius;
-                fahrenheit = true
-                cityWeather(data, celsius);
+                fahrenheit = false;
+                celsius = true;
+                cityWeather(data, metric);
 
         $.getJSON(metric + loc[0] + "&lon=" + loc[1] + "&appid=" + api_key, function(data){
             cityWeather(data, fahrenheit);
-            $("#toggle").click(function(){
-                celsius = true;
-                fahrenheit = false
-                cityWeather(data, fahrenheit);
-               })
-               })
+        })
                })
             })
         })
