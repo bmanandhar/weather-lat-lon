@@ -3,10 +3,11 @@ $(document).ready(function(){
 //    var openWeatherMap; on Toggle, trying to replace data by metric units available on the api url,
     var ipInfo = "https://ipinfo.io";
     var imperial = "https://api.openweathermap.org/data/2.5/weather?units=imperial&lat=";
-//    var metric = "http://api.openweathermap.org/data/2.5/weather?units=metric&lat=";
+    var metric = "http://api.openweathermap.org/data/2.5/weather?units=metric&lat=";
     var celsius = false;
+    var fahrenheit = true;
     function result(fahrenheit, celsius){
-        if(celsius) return Math.round(((fahrenheit - 32) * (5/9)) * 10) / 10 + "&deg" + "C";
+        if(celsius) return Math.round(celsius * 10) / 10 + "&deg" + "C";
         return Math.round(fahrenheit * 10) / 10 + "&deg" + "F";
     }
 
@@ -15,6 +16,25 @@ $(document).ready(function(){
         var temp = result(data.main.temp, celsius);
         var max = result(data.main.temp_max, celsius);
         var min = result(data.main.temp_min, celsius);
+
+        $(".city").html(city);
+        $(".region-country").html(region + ", " + country);
+        $(".temp").html(temp);
+        $(".weather").html(data.weather[0].description);
+        $(".max").html("Max temp: " + max);
+        $(".min").html("Min temp: " + min);
+        $(".humidity").html("Humidity: " + data.main.humidity + "%");
+        $(".pressure").html("Pressure: " + data.main.pressure + "hPa");
+        $(".wind-speed").html("Wind speed: " + data.wind.speed + "mile/hr");
+        $(".wind-dir").html("Wind direction: " + data.wind.deg + "&#176");
+        $(".temp").prepend("<img src='" + 'https://openweathermap.org/img/w/' + data.weather[0].icon + '.png' + "'>");
+    }
+
+    function cityWeather(data, fahrenheit){
+        console.log(data);
+        var temp = result(data.main.temp, fahrenheit);
+        var max = result(data.main.temp_max, fahrenheit);
+        var min = result(data.main.temp_min, fahrenheit);
 
         $(".city").html(city);
         $(".region-country").html(region + ", " + country);
@@ -42,7 +62,17 @@ $(document).ready(function(){
             cityWeather(data, celsius);
             $("#toggle").click(function(){
                 celsius = !celsius;
+                fahrenheit = true
                 cityWeather(data, celsius);
+
+        $.getJSON(metric + loc[0] + "&lon=" + loc[1] + "&appid=" + api_key, function(data){
+            cityWeather(data, fahrenheit);
+            $("#toggle").click(function(){
+                celsius = true;
+                fahrenheit = false
+                cityWeather(data, fahrenheit);
+               })
+               })
                })
             })
         })
